@@ -19,8 +19,8 @@ describe '#search' do
   end
 
   it 'paginate 10 search result' do
+    @product_search = App::ProductSearch.new
     (0..10).each do |itr|
-      @product_search = App::ProductSearch.new
       @opts = { keywords: 'sepeda balap', page: itr, per_page: 20 }
       @message = @product_search.search @opts
       puts "page #{itr}"
