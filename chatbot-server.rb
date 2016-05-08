@@ -1,5 +1,6 @@
 require 'telegram_bot'
 load 'app/config.rb'
+load 'app/search.rb'
 
 config = App::Config.new
 

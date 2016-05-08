@@ -9,9 +9,23 @@ GEM
       descendants_tracker (~> 0.0.1)
     descendants_tracker (0.0.4)
       thread_safe (~> 0.3, >= 0.3.1)
+    diff-lcs (1.2.5)
     equalizer (0.0.11)
     excon (0.49.0)
     ice_nine (0.11.2)
+    rspec (3.4.0)
+      rspec-core (~> 3.4.0)
+      rspec-expectations (~> 3.4.0)
+      rspec-mocks (~> 3.4.0)
+    rspec-core (3.4.4)
+      rspec-support (~> 3.4.0)
+    rspec-expectations (3.4.0)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.4.0)
+    rspec-mocks (3.4.1)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.4.0)
+    rspec-support (3.4.1)
     telegram_bot (0.0.5)
       excon (>= 0.30.0)
       virtus (>= 1.0.0)
@@ -26,6 +40,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  rspec
   telegram_bot
 
 BUNDLED WITH
