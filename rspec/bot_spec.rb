@@ -16,3 +16,22 @@ describe '#new' do
     end
   end
 end
+
+describe '#conn' do
+  context 'when attempt a connection to redis server' do
+    it 'create redis connection' do
+      @config = App::Config.new
+      @redis = @config.redis
+      expect(@redis).to be_an_instance_of Redis
+    end
+  end
+
+  context 'when set and get state to redis server' do
+    it 'create state on redis server and retrieved' do
+      @config = App::Config.new
+      @redis = @config.redis
+      @redis.set 'key', 'value'
+      expect(@redis.get('key')).to be == 'value'
+    end
+  end
+end
