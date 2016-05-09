@@ -17,7 +17,7 @@ module App
         opts = { keywords: input.strip!, per_page: 10 }
         @message = @product_search.search opts
       when /BANTUAN/i, /TOLONG/i, /APA/i
-        @message = 'CARI <kata kunci> : mencari barang berdasarkan kata kunci\n'
+        @message = "CARI <kata kunci> : mencari barang berdasarkan kata kunci\n"
       when /BUSUK/i, /BEGO/i, /TOLOL/i, /ANJING/i, /ASU/i
         @message = 'Omongannya dijaga bro ;)'
       when /LAGI/i
