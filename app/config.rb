@@ -11,6 +11,10 @@ module App
       @redis = Redis.new(host: '127.0.0.1', port: 6379, thread_safe: true)
     end
 
+    def tele_token
+      @token['token']
+    end
+
     private
 
     def load_config(path)
