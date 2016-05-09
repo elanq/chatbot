@@ -7,7 +7,6 @@ module App
 
     def initialize
       @token = load_config('app/config.yml')
-      @message = load_config('app/message.yml')
     end
 
     private
