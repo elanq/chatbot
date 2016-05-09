@@ -51,10 +51,18 @@ describe '#bot_search' do
   end
 
   context 'when accepting user input and process query' do
-    it 'search product with bukalapak api' do
-      input = 'CARI sepeda scott'
+    def search(input)
       bot.process input
       puts bot.reply
+    end
+    it 'search product with bukalapak api' do
+      words = { 'carikan' => 'sepeda gunung',
+                'cariin' => 'gelas cantik',
+                'cari' => 'figure iron man' }
+      words.each do |k, v|
+        input = "#{k} #{v}"
+        search input
+      end
     end
   end
 end
