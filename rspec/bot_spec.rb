@@ -15,14 +15,6 @@ describe '#new' do
       expect(@bot).to be_an_instance_of App::Bot
     end
   end
-
-  context 'when creating telegram bot instance' do
-    it 'create telegram bot' do
-      @config = App::Config.new
-      @telegram_bot = TelegramBot.new(token: @config.tele_token)
-      expect(@telegram_bot).to be_an_instance_of TelegramBot::Bot
-    end
-  end
 end
 
 describe '#conn' do

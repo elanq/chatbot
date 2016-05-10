@@ -16,12 +16,14 @@ module App
         input.slice! input.split(' ')[0]
         opts = { keywords: input.strip!, per_page: 10 }
         @message = @product_search.search opts
-      when /BANTUAN/i, /TOLONG/i, /APA/i
+      when /BANTU/i, /TOLONG/i, /APA/i
         @message = "CARI <kata kunci> : mencari barang berdasarkan kata kunci\n"
       when /BUSUK/i, /BEGO/i, /TOLOL/i, /ANJING/i, /ASU/i
         @message = 'Omongannya dijaga bro ;)'
       when /LAGI/i
         # TODO : save page to redis server
+      when /TEST/i
+        @message = 'Saya online gan! apa yang bisa saya BANTU? :D'
       end
     end
 
