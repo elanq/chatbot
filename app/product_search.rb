@@ -22,7 +22,7 @@ module App
       response_message = "Hasil pencarian #{@keywords}\n"
       itr = 1
       response['products'].each do |p|
-        response_message << "[#{itr}. #{p['name']}](#{p['url']}) \n"
+        response_message << "#{itr}. [#{p['name']}](#{p['url']}) \n"
         itr += 1
       end
       response_message << "\n ketik LAGI utk mencari #{@keywords} yang lainnya"
