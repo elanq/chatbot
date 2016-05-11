@@ -8,7 +8,6 @@ module App
     def initialize(redis)
       @product_search = App::ProductSearch.new
       @redis = redis
-
     end
 
     def process(input)

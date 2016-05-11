@@ -1,0 +1,98 @@
+---
+context:
+  -
+    question:
+      - gak?
+      - ya?
+      - apa
+      - gitu?
+      - ada?
+      - masih?
+    confirmation:
+      - oke
+      - sip
+      - ya
+      - nice
+      - good
+      - gud
+      - naisu
+      - siap
+    swearing:
+      - fuck
+      - jancok
+      - asu
+      - anjing
+      - bego
+      - tolol
+      - busuk
+      - kampang
+      - damput
+      - raimu
+    rejection:
+      - enggak
+      - tidak
+      - nda
+      - no
+    key_terms:
+      -
+        tiket:
+          -
+            bioskop:
+              - 21
+              - blitz
+            hotel:
+              - traveloka
+              - agoda
+            kereta: kai
+            pesawat: traveloka
+        cuaca:
+          - hujan
+          - cerah
+          - gerimis
+          - panas
+          - mendung
+          - berawan
+        availibility:
+          - penuh
+          - kosong
+          - ada
+    search_key:
+      - cari
+    search_option:
+      - lagi
+      - di
+      - tempatnya
+    time:
+      -
+        day:
+          - senin
+          - selasa
+          - rabu
+          - kamis
+          - jumat
+          - jum'at
+          - sabtu
+          - minggu
+        estimation:
+          -
+            besok: 1
+            kemarin: -1
+            lusa: 2
+        month:
+          - januari
+          - februari
+          - maret
+          - april
+          - mei
+          - juni
+          - juli
+          - agustus
+          - september
+          - oktober
+          - november
+          - desember
+        object:
+          - hari
+          - minggu
+          - bulan
+          - tahun
