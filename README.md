@@ -11,5 +11,5 @@ Sure, mobile apps provide better way for interaction and still the number one ch
 4. make your pull request
 
 # Changelog
-## [0.0.1] 11-5-2016
-### Support product searching at bukalapak.com
+> [0.0.1] 11-5-2016
+> - Support product searching at bukalapak.com
