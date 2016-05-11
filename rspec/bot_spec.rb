@@ -44,9 +44,16 @@ describe '#bot_search' do
 
   context 'when accepting user input and process query' do
     def search(input)
-      bot.process input
+      chat = Telegram::Bot::Types::Chat.new
+      message = Telegram::Bot::Types::Message.new
+      chat.id = 1234
+      message.chat = chat
+      message.text = input
+
+      bot.process message
       puts bot.reply
     end
+
     it 'search product with bukalapak api' do
       words = { 'carikan' => 'sepeda gunung',
                 'cariin' => 'gelas cantik',
@@ -55,6 +62,19 @@ describe '#bot_search' do
         input = "#{k} #{v}"
         search input
       end
+    end
+
+    it 'search product with bukalapak api and move to different pages' do
+      # search something first
+      search 'carikan peralatan makan'
+      # move to different page for peralatan makan
+      search 'lagi'
+      search 'lagi dong'
+      search 'lagi'
+      # reset search
+      search 'cari buku gambar'
+      # move to different page for buku gambar
+      search 'lagi'
     end
   end
 end

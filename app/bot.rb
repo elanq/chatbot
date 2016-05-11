@@ -1,4 +1,6 @@
 require_relative '../app/product_search.rb'
+require 'token'
+require 'json'
 
 module App
   # robot logic
@@ -6,23 +8,28 @@ module App
     def initialize(redis)
       @product_search = App::ProductSearch.new
       @redis = redis
+
     end
 
     def process(input)
       @message = nil
       message_text = input.text
-      user_reply_id = input.chat_id
+      @user_reply_id = input.chat.id
       case message_text
       when /CARI/i
-        @redis.set "chat-#{user_reply_id}", {last_keyword: message_text, current_page: 0}.to_json
+        search_term = {
+          keywords: message_text,
+          current_page: 0,
+          last_request_at: Time.now
+        }
+        save_search_term(search_term)
         do_search
       when /BANTU/i, /TOLONG/i, /APA/i
         @message = "CARI <kata kunci> : mencari barang berdasarkan kata kunci\n"
       when /BUSUK/i, /BEGO/i, /TOLOL/i, /ANJING/i, /ASU/i
         @message = 'Omongannya dijaga bro ;)'
       when /LAGI/i
-        # TODO : save page to redis server
-        search_more true
+        do_search true
       when /TEST/i
         @message = 'Saya online gan! apa yang bisa saya BANTU? :D'
       end
@@ -34,9 +41,20 @@ module App
 
     private
 
+    def save_search_term(search_term)
+      search_term.each do |k, v|
+        @redis.hset "chat-#{@user_reply_id}", k, v
+      end
+    end
+
     def do_search(search_more = false)
-      message_text.slice! message_text.split(' ')[0]
-      opts = { keywords: message_text.strip!, per_page: 6 }
+      keywords = @redis.hget "chat-#{@user_reply_id}", 'keywords'
+      page = @redis.hget "chat-#{@user_reply_id}", 'current_page'
+      page = @redis.hincrby "chat-#{@user}", 'current_page', 1 if search_more
+
+      keywords.slice! keywords.split(' ')[0]
+      opts = { keywords: keywords.strip!, per_page: 6, page: page }
+
       @message = @product_search.search opts
     end
   end
