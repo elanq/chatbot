@@ -1,4 +1,4 @@
-require_relative '../app/product_search.rb'
+require_relative '../app/search/product_search.rb'
 require 'token'
 require 'json'
 
@@ -6,7 +6,7 @@ module App
   # robot logic
   class Bot
     def initialize(config)
-      @product_search = App::ProductSearch.new
+      @product_search = App::Search::ProductSearch.new
       @redis = config.redis
       @context_keys = config.keys['context']
 

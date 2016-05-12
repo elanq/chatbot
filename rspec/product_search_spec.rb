@@ -1,27 +1,24 @@
 require_relative 'rspec_helper.rb'
 
-describe App::ProductSearch do
-end
-
 describe '#new' do
-  it 'initate new instance of App::ProductSearch' do
-    @product_search = App::ProductSearch.new
-    expect(@product_search).to be_an_instance_of App::ProductSearch
+  it 'initate new instance of App::Search::ProductSearch' do
+    @product_search = App::Search::ProductSearch.new
+    expect(@product_search).to be_an_instance_of App::Search::ProductSearch
   end
 end
 
 describe '#search' do
   it 'search product with product_search' do
-    @product_search = App::ProductSearch.new
-    @opts = { keywords: 'sepeda balap', page: 0, per_page: 20 }
+    @product_search = App::Search::ProductSearch.new
+    @opts = { keywords: 'sepeda balap', page: 0, per_page: 6 }
     @message = @product_search.search @opts
     puts @message
   end
 
-  it 'paginate 10 search result' do
-    @product_search = App::ProductSearch.new
-    (0..10).each do |itr|
-      @opts = { keywords: 'sepeda balap', page: itr, per_page: 20 }
+  it 'search and paginate up to 3 pages' do
+    @product_search = App::Search::ProductSearch.new
+    (0..3).each do |itr|
+      @opts = { keywords: 'sepeda balap', page: itr, per_page: 6 }
       @message = @product_search.search @opts
       puts "page #{itr}"
       puts @message

@@ -34,7 +34,7 @@ end
 
 describe '#bot_search' do
   def product_search
-    App::ProductSearch.new
+    App::Search::ProductSearch.new
   end
 
   def redis
