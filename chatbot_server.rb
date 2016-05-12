@@ -4,7 +4,7 @@ require_relative './app/bot.rb'
 
 config = App::Config.new
 
-bot_logic = App::Bot.new config.redis
+bot_logic = App::Bot.new config
 Telegram::Bot::Client.run(config.tele_token) do |bot|
   bot.listen do |message|
     puts "-> #{message.from.username} : #{message.text}"

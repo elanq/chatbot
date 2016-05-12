@@ -5,9 +5,12 @@ require 'json'
 module App
   # robot logic
   class Bot
-    def initialize(redis)
+    def initialize(config)
       @product_search = App::ProductSearch.new
-      @redis = redis
+      @redis = config.redis
+      @context_keys = config.keys['context']
+
+      @search = @context_keys['search_key'].map { |v| /#{v}/i }
     end
 
     def process(input)
@@ -15,14 +18,6 @@ module App
       message_text = input.text
       @user_reply_id = input.chat.id
       case message_text
-      when /CARI/i
-        search_term = {
-          keywords: message_text,
-          current_page: 0,
-          last_request_at: Time.now
-        }
-        save_search_term(search_term)
-        do_search
       when /BANTU/i, /TOLONG/i, /APA/i
         @message = help_message
       when /BUSUK/i, /BEGO/i, /TOLOL/i, /ANJING/i, /ASU/i
@@ -31,6 +26,14 @@ module App
         do_search true
       when /TEST/i, /PING/i
         @message = 'Saya online gan! apa yang bisa saya BANTU? :D'
+      when *@search
+        search_term = {
+          keywords: message_text,
+          current_page: 0,
+          last_request_at: Time.now
+        }
+        save_search_term(search_term)
+        do_search
       end
     end
 
@@ -59,6 +62,10 @@ module App
       opts = { keywords: keywords.strip!, per_page: 6, page: page }
 
       @message = @product_search.search opts
+    end
+
+    def filter_keyword
+      # TODO filter keyword based on configuration
     end
   end
 end

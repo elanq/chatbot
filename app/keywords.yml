@@ -1,6 +1,5 @@
 ---
 context:
-  -
     question:
       - gak?
       - ya?
@@ -34,9 +33,7 @@ context:
       - nda
       - no
     key_terms:
-      -
         tiket:
-          -
             bioskop:
               - 21
               - blitz
@@ -63,7 +60,6 @@ context:
       - di
       - tempatnya
     time:
-      -
         day:
           - senin
           - selasa
@@ -74,7 +70,6 @@ context:
           - sabtu
           - minggu
         estimation:
-          -
             besok: 1
             kemarin: -1
             lusa: 2

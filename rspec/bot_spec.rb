@@ -5,13 +5,13 @@ def config
 end
 
 def bot
-  @bot ||= App::Bot.new config.redis
+  @bot ||= App::Bot.new config
 end
 
 describe '#new' do
   context 'when creating bot instance' do
     it 'create new bot instance' do
-      @bot = App::Bot.new config.redis
+      @bot = App::Bot.new config
       expect(@bot).to be_an_instance_of App::Bot
     end
   end
