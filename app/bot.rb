@@ -10,7 +10,7 @@ module App
       @redis = config.redis
       @context_keys = config.keys['context']
 
-      @search = @context_keys['search_key'].map { |v| Regexp.new(Regexp.quote(user_input), Regexp::IGNORECASE) }
+      @search = @context_keys['search_key'].map { |v| Regexp.new(Regexp.quote(v), Regexp::IGNORECASE) }
     end
 
     def process(input)
