@@ -1,4 +1,5 @@
 require_relative '../app/search/product_search.rb'
+require_relative '../app/search/venue_search.rb'
 require_relative '../app/bot.rb'
 require_relative '../app/config.rb'
 require 'telegram/bot'

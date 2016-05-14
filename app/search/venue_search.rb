@@ -2,29 +2,28 @@ module App
   module Search
     # Use foursquare api to search user inputted location
     class VenueSearch
+      require 'foursquare2'
+
       def initialize
-        endpoint = YAML.load(IO.read('app/endpoint.yml'))
-        @uri = URI(endpoint['foursquare_api'])
+        token = YAML.load(IO.read('app/config.yml'))
+        api_version = Time.now.strftime('%Y%m%d')
+        client_id = token['foursquare']['client_id']
+        client_secret = token['foursquare']['client_secret']
+        @foursquare_client = Foursquare2::Client.new(client_id: client_id, client_secret: client_secret, aqpi_version: api_version)
       end
 
       def search(opts = {})
-        @keywords = opts[:keywords]
-        @uri.query = ''
-        @uri.query = URI.encode_www_form opts
-        construct_message(JSON.parse(Net::HTTP.get(@uri)))
+        return 'Tidak bisa mencari data' unless opts[:query].present? || opts[:ll].present?
+        construct_message(@foursquare_client.search_venues(opts).to_hash)
       end
 
       private
 
       def construct_message(response)
-        return 'tidak ada hasil' if response['products'].empty?
-        response_message = "Hasil pencarian #{@keywords}\n"
-        itr = 1
-        response['products'].each do |p|
-          response_message << "#{itr}. [#{p['name']}](#{p['url']}) \n"
-          itr += 1
+        message = "Hasil pencarian\n"
+        response.each do |v|
+          message << v['location']
         end
-        response_message << "\n ketik LAGI utk mencari #{@keywords} yang lainnya"
       end
     end
   end
