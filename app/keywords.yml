@@ -59,6 +59,10 @@ context:
       - lagi
       - di
       - tempatnya
+    location:
+      - tempat
+      - lokasi
+      - alamat
     time:
         day:
           - senin

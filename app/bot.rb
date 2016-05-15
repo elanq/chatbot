@@ -9,8 +9,6 @@ module App
       @product_search = App::Search::ProductSearch.new
       @redis = config.redis
       @context_keys = config.keys['context']
-
-      @search = @context_keys['search_key'].map { |v| Regexp.new(Regexp.quote(v), Regexp::IGNORECASE) }
     end
 
     def process(input)
@@ -20,13 +18,13 @@ module App
       case message_text
       when /BANTU/i, /TOLONG/i, /APA/i
         @message = help_message
-      when /BUSUK/i, /BEGO/i, /TOLOL/i, /ANJING/i, /ASU/i
-        @message = 'Omongannya dijaga bro ;)'
       when /LAGI/i
         do_search true
       when /TEST/i, /PING/i
         @message = 'Saya online gan! apa yang bisa saya BANTU? :D'
-      when *@search
+      when *filter_swearing
+        @message = 'Omongannya dijaga bro ;)'
+      when *filter_search_product
         search_term = {
           keywords: message_text,
           current_page: 0,
@@ -64,8 +62,20 @@ module App
       @message = @product_search.search opts
     end
 
-    def filter_keyword
-      # TODO filter keyword based on configuration
+    def filter_search_product
+      @context_keys['search_key'].map do |v|
+        Regexp.new(Regexp.quote(v), Regexp::IGNORECASE)
+      end
+    end
+
+    def filter_swearing
+      @context_keys['swearing'].map do |v|
+        Regexp.new(Regexp.quote(v), Regexp::IGNORECASE)
+      end
+    end
+
+    def filter_search_venue
+
     end
   end
 end
