@@ -76,5 +76,8 @@ describe '#bot_search' do
       # move to different page for buku gambar
       search 'lagi'
     end
+
+    it 'search venue with foursquare api' do
+    end
   end
 end

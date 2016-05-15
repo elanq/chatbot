@@ -69,13 +69,19 @@ module App
     end
 
     def filter_swearing
-      @context_keys['swearing'].map do |v|
-        Regexp.new(Regexp.quote(v), Regexp::IGNORECASE)
-      end
+      generate_filter 'swearing'
     end
 
     def filter_search_venue
+      search = filter_search_product
+      location_keys = generate_filter 'location'
+      search.concat location_keys
+    end
 
+    def generate_filter(keyword_name)
+      @context_keys[keyword_name].map do |v|
+        Regexp.new(Regexp.quote(v), Regexp::IGNORECASE)
+      end
     end
   end
 end
