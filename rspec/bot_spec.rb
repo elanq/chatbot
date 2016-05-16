@@ -8,6 +8,17 @@ def bot
   @bot ||= App::Bot.new config
 end
 
+def search(input)
+  chat = Telegram::Bot::Types::Chat.new
+  message = Telegram::Bot::Types::Message.new
+  chat.id = 1234
+  message.chat = chat
+  message.text = input
+
+  bot.process message
+  # puts bot.reply
+end
+
 describe '#new' do
   context 'when creating bot instance' do
     it 'create new bot instance' do
@@ -32,6 +43,21 @@ describe '#conn' do
   end
 end
 
+describe '#bot_learning' do
+  context 'when user inputting search query' do
+    it 'should able to differentiate between product or venue search' do
+      search 'cari tempat burger'
+      expect(bot.request_location?).to be true
+      search 'cari kambing guling'
+      expect(bot.request_location?).to be false
+    end
+
+    it 'return bot search information' do
+
+    end
+  end
+end
+
 describe '#bot_search' do
   def product_search
     App::Search::ProductSearch.new
@@ -43,17 +69,6 @@ describe '#bot_search' do
   end
 
   context 'when accepting user input and process query' do
-    def search(input)
-      chat = Telegram::Bot::Types::Chat.new
-      message = Telegram::Bot::Types::Message.new
-      chat.id = 1234
-      message.chat = chat
-      message.text = input
-
-      bot.process message
-      puts bot.reply
-    end
-
     it 'search product with bukalapak api' do
       words = { 'carikan' => 'sepeda gunung',
                 'cariin' => 'gelas cantik',
@@ -69,8 +84,6 @@ describe '#bot_search' do
       search 'carikan peralatan makan'
       # move to different page for peralatan makan
       search 'lagi'
-      search 'lagi dong'
-      search 'lagi'
       # reset search
       search 'cari buku gambar'
       # move to different page for buku gambar
@@ -78,6 +91,7 @@ describe '#bot_search' do
     end
 
     it 'search venue with foursquare api' do
+      search 'cari alamat kfc'
     end
   end
 end

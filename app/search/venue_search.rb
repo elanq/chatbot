@@ -24,7 +24,7 @@ module App
       private
 
       def construct_message(response)
-        message = "Tempat oke deket sini\n"
+        message = "Rekomendasi tempat sekitar kamu\n"
         response['venues'].each do |v|
           message << "#{v['name']} - #{v['location']['address']})\n" unless v['location']['address'].nil?
         end
