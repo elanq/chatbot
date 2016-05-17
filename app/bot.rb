@@ -12,14 +12,19 @@ module App
       @venue_search = App::Search::VenueSearch.new
       @redis = config.redis
       @request_location = false
+      @logger = config.logger
     end
+
     # is bot requesting location? return true if it is
     def request_location?
+      @logger.info "location request status : #{@request_location}"
       @request_location
     end
+
     # processing query.
     def process(input)
       # reset params
+      @logger.info 'reset search parameters'
       @message = nil
       message_text = input.text
       @user_reply_id = input.chat.id
@@ -27,6 +32,8 @@ module App
 
       case message_text
       when /caribarang/i
+        # just in case
+        @request_location = false
         search_term = {
           keywords: message_text,
           current_page: 0,
@@ -41,42 +48,41 @@ module App
         }
         save_search_term(search_term)
         @request_location = true
+        @message = 'Bisa minta lokasi sekarang?'
       when /BANTU/i, /TOLONG/i, /APA/i
         @message = help_message
       when /LAGI/i
-        do_search true
+        search_product true
       when /TEST/i, /PING/i
         @message = 'Saya online gan! apa yang bisa saya BANTU? :D'
-      # when *filter_swearing
-      #   @message = 'Omongannya dijaga bro ;)'
-      # when *filter_search_product
+      end
+    end
 
-      end
+    # handlng message with location
+    def handle_location(lat, lng)
+      @logger.info "handle location with lat #{lat} and lng #{lng}"
+      search_venue lat, lng
     end
-    # handling message keyboard inline callback
-    def handle_callback(message)
-      case message.data
-        when 'confirm_location'
-          message_location = message.message.location
-          search_venue message_location.latitude, message_location.longitude
-      end
-    end
+
     # get bot reply message
     def reply
       @message ||= 'Maaf, perintah anda tidak saya ketahui. ketik BANTUAN untuk melihat daftar perintah saya!'
     end
 
     private
-    #help message
+
+    # help message
     def help_message
       "Halo! saya adalah EQBot, saya bisa membantu kamu untuk mencari barang yang kamu butuhkan di bukalapak.com \n Silahkan CARI nama barang yang kamu inginkan, nanti saya carikan barangnya ya :D"
     end
+
     # set search param to redis
     def save_search_term(search_term)
       search_term.each do |k, v|
         @redis.hset "chat-#{@user_reply_id}", k, v
       end
     end
+
     # filter query and search!
     def do_search(search_more = false)
       # keywords = @redis.hget "chat-#{@user_reply_id}", 'keywords'
@@ -87,6 +93,7 @@ module App
         @request_location = true
       end
     end
+
     # search product
     def search_product(search_more = false)
       keywords = @redis.hget "chat-#{@user_reply_id}", 'keywords'
@@ -96,15 +103,19 @@ module App
       keywords.slice! keywords.split[0]
       opts = { keywords: keywords.strip!, per_page: 6, page: page }
 
-      @message = @product_search.search opts
+      @message = keywords.nil? ? 'Terjadi kesalahan dalam pencarian' : @product_search.search(opts)
     end
+
     # search venue
     def search_venue(lat, long)
       query = @redis.hget "chat-#{@user_reply_id}", 'venue_keywords'
       query.slice! query.split[0]
 
-      opts = {query: query, limit: 6, ll: "#{lat},#{long}"}
-      @message = @venue_search.search opts
+      @logger.info "search venue with query'#{query}'"
+
+      opts = { query: query, limit: 6, ll: "#{lat},#{long}" }
+      @message = query.nil? ? 'Terjadi kesalahan dalam pencarian' : @venue_search.search(opts)
+      @logger.info "search venue completed, return message '#{@message}'"
     end
   end
 end

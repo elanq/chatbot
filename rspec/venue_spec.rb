@@ -8,7 +8,7 @@ describe '#new' do
 end
 
 describe '#search' do
-  it 'search product with venue_search' do
+  it 'search venue with venue_search' do
     @venue_search = App::Search::VenueSearch.new
     @ll = '-6.2011036,106.7808587'
     @opts = { query: 'burger', ll: @ll, limit: 6 } # required params

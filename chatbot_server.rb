@@ -5,24 +5,23 @@ require_relative './app/bot.rb'
 config = App::Config.new
 
 bot_logic = App::Bot.new config
-Telegram::Bot::Client.run(config.tele_token, logger: config.logger) do |bot|
+logger = config.logger
+Telegram::Bot::Client.run(config.tele_token, logger: logger) do |bot|
   bot.listen do |message|
+    processed = false
     reply_markup = nil
-    puts message.to_json
-    case message.data
-    when Telegram::Bot::Types::CallbackQuery
-      puts 'callback query trigerred'
-      bot_logic.handle_callback message
+
+    unless message.location.nil?
+      logger.info 'this message contains location'
+      lat = message.location.latitude
+      lng = message.location.longitude
+      bot_logic.handle_location(lat, lng) if bot_logic.request_location?
+      processed = true
     end
 
-    puts "-> #{message.from.username} : #{message.text}"
-    bot_logic.process message
-
+    bot_logic.process(message) unless processed
     if bot_logic.request_location?
-      bot.api.send_message(chat_id: target, text: 'Boleh kasih tahu lokasinya?')
-      kb = [
-              Telegram::Bot::Types::InlineKeyboardButton.new(text: 'Kirim lokasi sekarang', request_location: true, callback_data: 'confirm_location')
-            ]
+      kb = [Telegram::Bot::Types::KeyboardButton.new(text: 'Kirim lokasi sekarang', request_location: true)]
       reply_markup = Telegram::Bot::Types::ReplyKeyboardMarkup.new(keyboard: kb)
     end
 
@@ -38,6 +37,6 @@ Telegram::Bot::Client.run(config.tele_token, logger: config.logger) do |bot|
     opts['reply_markup'] = reply_markup if bot_logic.request_location?
 
     bot.api.send_message(opts)
-    puts "##{reply} -> #{target}"
+    logger.info "##{reply} -> #{target}"
   end
 end
