@@ -46,14 +46,10 @@ end
 describe '#bot_learning' do
   context 'when user inputting search query' do
     it 'should able to differentiate between product or venue search' do
-      search 'cari tempat burger'
+      search '/carilokasi burger'
       expect(bot.request_location?).to be true
-      search 'cari kambing guling'
+      search '/caribarang piring cantik'
       expect(bot.request_location?).to be false
-    end
-
-    it 'return bot search information' do
-
     end
   end
 end
@@ -70,9 +66,9 @@ describe '#bot_search' do
 
   context 'when accepting user input and process query' do
     it 'search product with bukalapak api' do
-      words = { 'carikan' => 'sepeda gunung',
-                'cariin' => 'gelas cantik',
-                'cari' => 'figure iron man' }
+      words = { '/caribarang' => 'sepeda gunung',
+                '/caribarang' => 'gelas cantik',
+                '/caribarang' => 'figure iron man' }
       words.each do |k, v|
         input = "#{k} #{v}"
         search input
@@ -81,17 +77,17 @@ describe '#bot_search' do
 
     it 'search product with bukalapak api and move to different pages' do
       # search something first
-      search 'carikan peralatan makan'
+      search '/caribarang peralatan makan'
       # move to different page for peralatan makan
       search 'lagi'
       # reset search
-      search 'cari buku gambar'
+      search '/caribarang buku gambar'
       # move to different page for buku gambar
       search 'lagi'
     end
 
     it 'search venue with foursquare api' do
-      search 'cari alamat kfc'
+      search 'carilokasi burger king'
     end
   end
 end
