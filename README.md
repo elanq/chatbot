@@ -13,5 +13,6 @@ Sure, mobile apps provide better way for interaction and still the number one ch
 # Changelog
 > [0.0.1] 11-5-2016
 > - Support product searching at bukalapak.com
+
 > [0.0.2] 17-5-2016
 > - Support venue searching with foursquare api
