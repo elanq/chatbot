@@ -11,14 +11,14 @@ module App
       @product_search = App::Search::ProductSearch.new
       @venue_search = App::Search::VenueSearch.new
       @redis = config.redis
-      @request_location = false
       @logger = config.logger
     end
 
     # is bot requesting location? return true if it is
-    def request_location?
-      @logger.info "location request status : #{@request_location}"
-      @request_location
+    def request_location?(reply_id)
+      request_location = @redis.hget "chat-#{reply_id}", 'request_location'
+      @logger.info "location request status : #{request_location}"
+      request_location.nil? ? false : request_location
     end
 
     # processing query.
@@ -37,14 +37,16 @@ module App
         search_term = {
           keywords: message_text,
           current_page: 0,
-          last_request_at: Time.now
+          last_request_at: Time.now,
+          request_location: false
         }
         save_search_term(search_term)
         search_product
       when /carilokasi/i
         search_term = {
           venue_keywords: message_text,
-          last_request_at: Time.now
+          last_request_at: Time.now,
+          request_location: true
         }
         save_search_term(search_term)
         @request_location = true
@@ -80,17 +82,6 @@ module App
     def save_search_term(search_term)
       search_term.each do |k, v|
         @redis.hset "chat-#{@user_reply_id}", k, v
-      end
-    end
-
-    # filter query and search!
-    def do_search(search_more = false)
-      # keywords = @redis.hget "chat-#{@user_reply_id}", 'keywords'
-      case search_context keywords
-      when 'product'
-        search_product search_more
-      when 'location'
-        @request_location = true
       end
     end
 

@@ -9,14 +9,26 @@ def bot
 end
 
 def search(input)
+  message = build_message(input) unless input.class == Telegram::Bot::Types::Message
+  bot.process message
+  # puts bot.reply
+end
+
+def build_message(text)
   chat = Telegram::Bot::Types::Chat.new
   message = Telegram::Bot::Types::Message.new
   chat.id = 1234
   message.chat = chat
-  message.text = input
+  message.text = text
+  message
+end
 
-  bot.process message
-  # puts bot.reply
+def add_location(message)
+  location = Telegram::Bot::Types::Location.new
+  location.latitude = -6.273891
+  location.longitude = 106.8202928
+  message.location = location
+  message
 end
 
 describe '#new' do
@@ -87,7 +99,8 @@ describe '#bot_search' do
     end
 
     it 'search venue with foursquare api' do
-      search 'carilokasi burger king'
+      message = build_message '/carilokasi burger king'
+      search message
     end
   end
 end

@@ -15,12 +15,12 @@ Telegram::Bot::Client.run(config.tele_token, logger: logger) do |bot|
       logger.info 'this message contains location'
       lat = message.location.latitude
       lng = message.location.longitude
-      bot_logic.handle_location(lat, lng) if bot_logic.request_location?
+      bot_logic.handle_location(lat, lng) if bot_logic.request_location?(message.chat.id)
       processed = true
     end
 
     bot_logic.process(message) unless processed
-    if bot_logic.request_location?
+    if bot_logic.request_location?(message.chat.id)
       kb = [Telegram::Bot::Types::KeyboardButton.new(text: 'Kirim lokasi sekarang', request_location: true)]
       reply_markup = Telegram::Bot::Types::ReplyKeyboardMarkup.new(keyboard: kb)
     end
@@ -34,7 +34,7 @@ Telegram::Bot::Client.run(config.tele_token, logger: logger) do |bot|
       parse_mode: 'Markdown',
       disable_web_page_preview: true
     }
-    opts['reply_markup'] = reply_markup if bot_logic.request_location?
+    opts['reply_markup'] = reply_markup if bot_logic.request_location?(target)
 
     bot.api.send_message(opts)
     logger.info "##{reply} -> #{target}"
