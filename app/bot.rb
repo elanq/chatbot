@@ -28,12 +28,9 @@ module App
       @message = nil
       message_text = input.text
       @user_reply_id = input.chat.id
-      @request_location = false
 
       case message_text
       when /caribarang/i
-        # just in case
-        @request_location = false
         search_term = {
           keywords: message_text,
           current_page: 0,
@@ -49,7 +46,6 @@ module App
           request_location: true
         }
         save_search_term(search_term)
-        @request_location = true
         @message = 'Bisa minta lokasi sekarang?'
       when /BANTU/i, /TOLONG/i, /APA/i
         @message = help_message
@@ -107,6 +103,8 @@ module App
       opts = { query: query, limit: 6, ll: "#{lat},#{long}" }
       @message = query.nil? ? 'Terjadi kesalahan dalam pencarian' : @venue_search.search(opts)
       @logger.info "search venue completed, return message '#{@message}'"
+      # change request status back to false
+      save_search_term({request_location: false})
     end
   end
 end
