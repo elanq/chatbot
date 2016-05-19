@@ -99,12 +99,13 @@ module App
       query.slice! query.split[0]
 
       @logger.info "search venue with query'#{query}'"
-
-      opts = { query: query, limit: 6, ll: "#{lat},#{long}" }
+      ll = "#{lat},#{long}"
+      opts = { query: query, limit: 6, ll: ll }
+      @venue_search.origin_location = ll
       @message = query.nil? ? 'Terjadi kesalahan dalam pencarian' : @venue_search.search(opts)
       @logger.info "search venue completed, return message '#{@message}'"
       # change request status back to false
-      save_search_term({request_location: false})
+      save_search_term(request_location: false, last_location: ll)
     end
   end
 end

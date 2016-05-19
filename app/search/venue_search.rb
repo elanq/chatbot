@@ -4,6 +4,8 @@ module App
     class VenueSearch
       require 'foursquare2'
 
+      attr_writer :origin_location
+
       def initialize
         token = YAML.load(IO.read('app/config.yml'))
         api_version = Time.now.strftime('%Y%m%d')
@@ -18,15 +20,19 @@ module App
       end
 
       def search_recommended(opts = {})
-        return 'Tidak bisa mencari data, mungkin locationnya dinyalain?' if  opts[:ll].nil?
+        return 'Tidak bisa mencari data, mungkin locationnya dinyalain?' if opts[:ll].nil?
       end
 
       private
 
       def construct_message(response)
+        url = 'https://www.google.com/maps/dir/'
         message = "Rekomendasi tempat sekitar kamu\n"
         response['venues'].each do |v|
-          message << "#{v['name']} - #{v['location']['address']})\n" unless v['location']['address'].nil?
+          ll_to = "#{v['location']['lat']},#{v['location']['lng']}"
+          @origin_location ||= '-6.2739129,106.8216103'
+          route_link = "#{url}#{@origin_location}/#{ll_to}"
+          message << "[#{v['name']} - #{v['location']['address']}](#{route_link}))\n" unless v['location']['address'].nil?
         end
         message
       end
