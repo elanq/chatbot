@@ -18,7 +18,7 @@ module App
     def request_location?(reply_id)
       request_location = @redis.hget "chat-#{reply_id}", 'request_location'
       @logger.info "location request status : #{request_location}"
-      request_location.nil? ? false : request_location
+      request_location.nil? ? false : true
     end
 
     # processing query.
@@ -91,6 +91,7 @@ module App
       opts = { keywords: keywords.strip!, per_page: 6, page: page }
 
       @message = keywords.nil? ? 'Terjadi kesalahan dalam pencarian' : @product_search.search(opts)
+      save_search_term(request_location: false)
     end
 
     # search venue

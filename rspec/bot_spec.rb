@@ -59,9 +59,9 @@ describe '#bot_learning' do
   context 'when user inputting search query' do
     it 'should able to differentiate between product or venue search' do
       search '/carilokasi burger'
-      expect(bot.request_location?).to be true
+      expect(bot.request_location?(1234)).to be true
       search '/caribarang piring cantik'
-      expect(bot.request_location?).to be false
+      expect(bot.request_location?(1234)).to be false
     end
   end
 end
@@ -101,6 +101,7 @@ describe '#bot_search' do
     it 'search venue with foursquare api' do
       message = build_message '/carilokasi burger king'
       search message
+      expect(bot.request_location?(1234)).to be true
     end
   end
 end
