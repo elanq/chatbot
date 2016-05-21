@@ -1,3 +1,4 @@
+require_relative '../app/search/search.rb'
 require_relative '../app/search/product_search.rb'
 require_relative '../app/search/venue_search.rb'
 require_relative '../app/bot.rb'

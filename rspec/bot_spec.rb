@@ -78,11 +78,9 @@ describe '#bot_search' do
 
   context 'when accepting user input and process query' do
     it 'search product with bukalapak api' do
-      words = { '/caribarang' => 'sepeda gunung',
-                '/caribarang' => 'gelas cantik',
-                '/caribarang' => 'figure iron man' }
+      words = ['sepeda gunung', 'gelas cantik', 'figure iron man']
       words.each do |k, v|
-        input = "#{k} #{v}"
+        input = "/caribarang #{v}"
         search input
       end
     end

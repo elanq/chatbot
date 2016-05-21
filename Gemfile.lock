@@ -56,6 +56,3 @@ DEPENDENCIES
   rspec
   telegram-bot-ruby
   token
-
-BUNDLED WITH
-   1.11.2
