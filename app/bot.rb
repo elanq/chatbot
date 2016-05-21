@@ -64,7 +64,7 @@ module App
 
     # get bot reply message
     def reply
-      @message ||= 'Maaf, perintah anda tidak saya ketahui. ketik BANTUAN untuk melihat daftar perintah saya!'
+      @message ||= 'Maaf, perintah anda tidak saya ketahui. ketik BANTU untuk melihat daftar perintah saya!'
     end
 
     private
