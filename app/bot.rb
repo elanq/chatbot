@@ -28,25 +28,27 @@ module App
       @message = nil
       message_text = input.text
       @user_reply_id = input.chat.id
+      # set default request location to false
+      save_search_term request_location: false
 
       case message_text
       when /caribarang/i
         search_term = {
           keywords: message_text,
           current_page: 0,
-          last_request_at: Time.now,
-          request_location: false
+          last_request_at: Time.now
         }
         save_search_term(search_term)
         search_product
       when /carilokasi/i
+        last_location = last_saved_location
         search_term = {
           venue_keywords: message_text,
           last_request_at: Time.now,
-          request_location: true
+          request_location: last_location.empty? ? true : false
         }
-        save_search_term(search_term)
-        @message = 'Bisa minta lokasi sekarang?'
+        save_search_term search_term
+        last_location.empty? ? @message = 'Bisa minta lokasi sekarang?' : handle_location(last_location[0], last_location[1])
       when /BANTU/i, /TOLONG/i, /APA/i
         @message = help_message
       when /LAGI/i
@@ -81,32 +83,56 @@ module App
       end
     end
 
+    # set message expired time
+    def save_last_location(last_location, timeout = 60)
+      @logger.info "saving last location at #{last_location}"
+      key = "chat-#{@user_reply_id}-last_location"
+      saved_status = @redis.get(key).nil?
+      @redis.set(key, last_location, ex: timeout) if saved_status
+      @logger.info "saved status is #{saved_status}"
+    end
+
+    def last_saved_location
+      ll = []
+      key = "chat-#{@user_reply_id}-last_location"
+      ttl_status = @redis.get key
+      ll = @redis.get(key).split(',').map(&:to_f) unless ttl_status.nil?
+      @logger.info "last saved location at #{ll ||= 'empty'}"
+      ll
+    end
+
     # search product
     def search_product(search_more = false)
       keywords = @redis.hget "chat-#{@user_reply_id}", 'keywords'
+      @message = 'Terjadi kesalahan dalam pencarian barang'
+      return if keywords.nil?
       page = @redis.hget "chat-#{@user_reply_id}", 'current_page'
       page = @redis.hincrby "chat-#{@user}", 'current_page', 1 if search_more
 
       keywords.slice! keywords.split[0]
       opts = { keywords: keywords.strip!, per_page: 6, page: page }
 
-      @message = keywords.nil? ? 'Terjadi kesalahan dalam pencarian' : @product_search.search(opts)
-      save_search_term(request_location: false)
+      @message = @product_search.search(opts)
+      save_search_term request_location: false
     end
 
     # search venue
     def search_venue(lat, long)
       query = @redis.hget "chat-#{@user_reply_id}", 'venue_keywords'
+      @logger.info "search venue query #{query ||= 'is empty'}"
+      @message = 'Terjadi kesalahan dalam pencarian lokasi'
+      return if query.nil?
       query.slice! query.split[0]
 
       @logger.info "search venue with query'#{query}'"
       ll = "#{lat},#{long}"
       opts = { query: query, limit: 6, ll: ll }
       @venue_search.origin_location = ll
-      @message = query.nil? ? 'Terjadi kesalahan dalam pencarian' : @venue_search.search(opts)
+      @message = @venue_search.search(opts)
       @logger.info "search venue completed, return message '#{@message}'"
       # change request status back to false
-      save_search_term(request_location: false, last_location: ll)
+      save_search_term request_location: false
+      save_last_location ll if last_saved_location.empty?
     end
   end
 end

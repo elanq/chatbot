@@ -32,7 +32,7 @@ module App
           ll_to = "#{v['location']['lat']},#{v['location']['lng']}"
           @origin_location ||= '-6.2739129,106.8216103'
           route_link = "#{url}#{@origin_location}/#{ll_to}"
-          message << "[#{v['name']} - #{v['location']['address']}](#{route_link}))\n" unless v['location']['address'].nil?
+          message << "[#{v['name']} - #{v['location']['address']}](#{route_link})\n" unless v['location']['address'].nil?
         end
         message
       end
