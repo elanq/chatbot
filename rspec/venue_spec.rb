@@ -16,6 +16,14 @@ describe '#search' do
     puts @message
   end
 
+  it 'search unknown venue' do
+    @venue_search = App::Search::VenueSearch.new
+    @ll = '-6.2011036,106.7808587'
+    @opts = { query: 'fdsojfidfjo', ll: @ll, limit: 6 } # required params
+    @message = @venue_search.search @opts
+    puts @message
+  end
+
   # it 'search and paginate up to 3 pages' do
   #   @venue_search = App::Search::VenueSearch.new
   #   (0..3).each do |itr|
