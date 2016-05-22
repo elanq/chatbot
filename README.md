@@ -16,3 +16,6 @@ Sure, mobile apps provide better way for interaction and still the number one ch
 
 > [0.0.2] 17-5-2016
 > - Support venue searching with foursquare api
+
+> [0.0.2] 22-5-2016
+> - Now bot will save user location for an hour. This will make bot won't request user location when initiating venue searching
