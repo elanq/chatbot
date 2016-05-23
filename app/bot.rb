@@ -73,7 +73,7 @@ module App
 
     # help message
     def help_message
-      "/caribarang <nama barang> untuk mencari barang yang tersedia di bukalapak.com\n /carilokasi untuk mencari lokasi di sekitar kamu"
+      "/caribarang <nama barang> untuk mencari barang yang tersedia di bukalapak.com\n /carilokasi untuk mencari lokasi di sekitar kamu\n\n Untuk diperhatikan bahwa bot ini hanya bisa memahami perintah-perintah diatas. Jadi kalau mau aneh-aneh disini bukan tempatnya yaaaa"
     end
 
     # set search param to redis
