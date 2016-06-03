@@ -90,7 +90,7 @@ module App
     end
 
     # set message expired time
-    def save_last_location(last_location, timeout = 60)
+    def save_last_location(last_location, timeout = 3600)
       @logger.info "saving last location at #{last_location}"
       key = "chat-#{@user_reply_id}-last_location"
       saved_status = @redis.get(key).nil?
