@@ -32,6 +32,8 @@ module App
       save_search_term request_location: false
 
       case message_text
+      when "/start"
+        @message = welcome
       when /caribarang/i
         search_term = {
           keywords: message_text,
@@ -70,6 +72,10 @@ module App
     end
 
     private
+
+    def welcome
+      "Halo, saya asisten robot ciptaan @qisthi yang bisa membantu kamu untuk mendapatkan informasi-informasi yang kamu butuhkan. Tulis BANTU untuk melihat daftar perintah yang saya ketahui :D"
+    end
 
     # help message
     def help_message
