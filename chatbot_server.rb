@@ -10,7 +10,6 @@ Telegram::Bot::Client.run(config.tele_token, logger: logger) do |bot|
   bot.listen do |message|
     processed = false
     reply_markup = nil
-
     unless message.location.nil?
       logger.info 'this message contains location'
       lat = message.location.latitude

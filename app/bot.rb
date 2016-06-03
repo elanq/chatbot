@@ -18,7 +18,7 @@ module App
     def request_location?(reply_id)
       request_location = @redis.hget "chat-#{reply_id}", 'request_location'
       @logger.info "location request status : #{request_location}"
-      request_location.nil? ? false : true
+      request_location == 'false' ? false : true
     end
 
     # processing query.
@@ -32,7 +32,7 @@ module App
       save_search_term request_location: false
 
       case message_text
-      when "/start"
+      when /start/i
         @message = welcome
       when /caribarang/i
         search_term = {
