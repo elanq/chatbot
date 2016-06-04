@@ -1,6 +1,6 @@
 require 'redis'
 require 'logger'
-require 'dotenv'
+
 
 module App
   # configuration class
@@ -8,7 +8,6 @@ module App
     attr_reader :token, :message, :redis, :keys, :logger
 
     def initialize
-      Dotenv.load
       @token = ENV['TELEGRAM_TOKEN']
       @redis = Redis.new(host: '127.0.0.1', port: 6379, thread_safe: true)
       @logger = Logger.new(STDOUT)
