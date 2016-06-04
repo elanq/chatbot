@@ -4,3 +4,6 @@ require_relative '../app/search/venue_search.rb'
 require_relative '../app/bot.rb'
 require_relative '../app/config.rb'
 require 'telegram/bot'
+require 'dotenv'
+
+Dotenv.load

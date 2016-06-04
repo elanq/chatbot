@@ -8,7 +8,12 @@ def bot
   @bot ||= App::Bot.new config
 end
 
+def logger
+  @logger ||= config.logger
+end
+
 def search(input)
+  message = input
   message = build_message(input) unless input.class == Telegram::Bot::Types::Message
   bot.process message
   # puts bot.reply

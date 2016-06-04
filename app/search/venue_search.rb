@@ -7,10 +7,9 @@ module App
       attr_writer :origin_location
 
       def initialize
-        token = YAML.load(IO.read('app/config.yml'))
         api_version = Time.now.strftime('%Y%m%d')
-        client_id = token['foursquare']['client_id']
-        client_secret = token['foursquare']['client_secret']
+        client_id = ENV['FOURSQUARE_CLIENT_ID']
+        client_secret = ENV['FOURSQUARE_CLIENT_SECRET']
         @foursquare_client = Foursquare2::Client.new(client_id: client_id, client_secret: client_secret, api_version: api_version)
       end
 

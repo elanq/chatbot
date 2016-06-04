@@ -1,6 +1,6 @@
-require 'yaml'
 require 'redis'
 require 'logger'
+require 'dotenv'
 
 module App
   # configuration class
@@ -8,8 +8,8 @@ module App
     attr_reader :token, :message, :redis, :keys, :logger
 
     def initialize
-      @token = load_config('../app/config.yml')
-      @keys = load_config('../app/keywords.yml')
+      Dotenv.load
+      @token = ENV['TELEGRAM_TOKEN']
       @redis = Redis.new(host: '127.0.0.1', port: 6379, thread_safe: true)
       @logger = Logger.new(STDOUT)
     end
@@ -18,10 +18,5 @@ module App
       @token['token']
     end
 
-    private
-
-    def load_config(path)
-      YAML.load(IO.read(path))
-    end
   end
 end

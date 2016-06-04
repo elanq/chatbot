@@ -24,6 +24,8 @@ module App
     # processing query.
     def process(input)
       # reset params
+      @logger.debug input
+      @logger.debug input.class
       @logger.info 'reset search parameters'
       @message = nil
       message_text = input.text

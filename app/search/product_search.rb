@@ -3,8 +3,7 @@ module App
     # used to search product with BL Api and provide the result in message
     class ProductSearch
       def initialize
-        endpoint = YAML.load(IO.read('app/endpoint.yml'))
-        @uri = URI(endpoint['bukalapak_api']['product_search'])
+        @uri = URI(ENV['BL_PRODUCT_SEARCH'])
       end
 
       def search(opts = {})

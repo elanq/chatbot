@@ -2,3 +2,4 @@ app/config.yml
 app/endpoint.yml
 .bundle/
 bin/
+.env
