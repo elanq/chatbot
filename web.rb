@@ -6,7 +6,7 @@ config = App::Config.new
 
 bot_logic = App::Bot.new config
 logger = config.logger
-Telegram::Bot::Client.run(config.tele_token, logger: logger) do |bot|
+Telegram::Bot::Client.run(config.token, logger: logger) do |bot|
   bot.listen do |message|
     processed = false
     reply_markup = nil
