@@ -7,5 +7,6 @@ require_relative '../app/bot.rb'
 require_relative '../app/config.rb'
 require 'telegram/bot'
 require 'dotenv'
+require 'pry'
 
 Dotenv.load

@@ -5,7 +5,7 @@ require 'dotenv'
 module App
   # configuration class
   class Config
-    attr_reader :token, :message, :redis, :keys, :logger
+    attr_reader :token, :redis, :logger
 
     def initialize
       Dotenv.load
