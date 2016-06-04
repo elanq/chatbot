@@ -17,7 +17,6 @@ module App
         option = default_option.merge(option)
         @spiderman.get(@train_site) do |page|
           search = page.form_with(name: 'input') do |f|
-            # f.tanggal = '20160615#Sabtu, 15 Juni 2016'
             f.tanggal = date
             f.origination = origin
             f.destination = dest

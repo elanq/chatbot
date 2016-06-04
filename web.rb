@@ -1,6 +1,5 @@
 require 'telegram/bot'
-require_relative './app/config.rb'
-require_relative './app/bot.rb'
+require_relative 'app/app.rb'
 
 config = App::Config.new
 

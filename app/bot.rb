@@ -1,8 +1,3 @@
-require_relative '../app/search/product_search.rb'
-require_relative '../app/search/venue_search.rb'
-require 'token'
-require 'json'
-
 module App
   # robot logic
   class Bot
