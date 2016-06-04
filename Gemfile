@@ -7,6 +7,11 @@ gem 'telegram-bot-ruby'
 gem 'token'
 gem 'foursquare2'
 
+gem 'nokogiri'
+gem 'pry'
+gem 'mechanize'
+
+
 group :test, :development do
   gem 'dotenv'
 end
