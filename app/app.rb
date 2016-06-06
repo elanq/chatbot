@@ -9,4 +9,5 @@ module App
   require 'redis'
   require 'logger'
   require 'dotenv'
+  require 'yaml'
 end

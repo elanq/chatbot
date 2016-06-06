@@ -17,13 +17,20 @@ end
 
 describe '#crawl' do
   it 'crawls for ticket schedules' do
-    date = '20160615#'
-    orig = 'BD#'
-    dest = 'MN#'
-    train.crawl date, orig, dest
+    input = '20160615#Bandung#Madiun'
+    train.crawl input
     expect(train.result).not_to eq'Tidak ada jadwal tersedia'
-    date = '20150615#'
-    train.crawl date, orig, dest
+    modified_input = '20150615#Bandung#Madiun'
+    train.crawl modified_input
     expect(train.result).to eq'Tidak ada jadwal tersedia'
+  end
+
+  it 'show errors for invalid input'do
+    invalid_city_input = '20160615#Badung#Madiun'
+    train.crawl invalid_city_input
+    expect(train.result).to eq 'Nama stasiun tidak dikenal, coba lagi'
+    invalid_format = 'luullsss'
+    train.crawl invalid_format
+    expect(train.result).to eq('Format pencarian salah')
   end
 end

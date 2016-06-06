@@ -5,6 +5,7 @@ module App
     def initialize(config)
       @product_search = App::Search::ProductSearch.new
       @venue_search = App::Search::VenueSearch.new
+      @train_schedule_search = App::Crawler::Train.new
       @redis = config.redis
       @logger = config.logger
     end
@@ -16,6 +17,12 @@ module App
       request_location == 'false' ? false : true
     end
 
+    # is bot requesting ticketing detail?
+    def request_ticketing?(reply_id)
+      request_ticketing = @redis.hget "chat-#{reply_id}", 'request_ticketing'
+      request_ticketing == 'true' ? true : false
+    end
+
     # processing query.
     def process(input)
       # reset params
@@ -23,14 +30,23 @@ module App
       @message = nil
       message_text = input.text
       @user_reply_id = input.chat.id
-      # set default request location to false
+      # set default request to false
       save_search_term request_location: false
 
       case message_text
       when /start/i
         @message = welcome
+      when /cektiket/i
+        @message = cektiket_disclaimer
+        search_term = {
+          action: 'cek_tiket',
+          last_request_at: Time.now,
+          request_ticketing: true
+        }
+        save_search_term search_term
       when /caribarang/i
         search_term = {
+          action: 'cari_barang',
           keywords: message_text,
           current_page: 0,
           last_request_at: Time.now
@@ -40,6 +56,7 @@ module App
       when /carilokasi/i
         last_location = last_saved_location
         search_term = {
+          action: 'cari_lokasi',
           venue_keywords: message_text,
           last_request_at: Time.now,
           request_location: last_location.empty? ? true : false
@@ -52,6 +69,12 @@ module App
         search_product true
       when /TEST/i, /PING/i
         @message = 'Saya online gan! apa yang bisa saya BANTU? :D'
+      else
+        if request_ticketing?(@user_reply_id)
+          @train_schedule_search.crawl message_text
+          @message = @train_schedule_search.result
+          save_search_term request_ticketing: false
+        end
       end
     end
 
@@ -69,7 +92,11 @@ module App
     private
 
     def welcome
-      "Halo, saya asisten robot ciptaan @qisthi yang bisa membantu kamu untuk mendapatkan informasi-informasi yang kamu butuhkan. Tulis BANTU untuk melihat daftar perintah yang saya ketahui :D"
+      'Halo, saya asisten robot ciptaan @qisthi yang bisa membantu kamu untuk mendapatkan informasi-informasi yang kamu butuhkan. Tulis BANTU untuk melihat daftar perintah yang saya ketahui :D'
+    end
+
+    def cektiket_disclaimer
+      "Fitur ini masih eksperimental dan sangat terbatas fungsionalitasnya. Untuk sekarang, perintah ini hanya support untuk mengecek ketersediaan tiket kereta dan tidak support untuk pemesanaan tiket.\n\n Silahkan masukkan balas dengan format berikut untuk melihat kesediaan tiket kereta\ntanggalpesan#dari#tujuan\ncontoh: 20161231#Bandung#Gambir"
     end
 
     # help message
@@ -93,6 +120,7 @@ module App
       @logger.info "saved status is #{saved_status}"
     end
 
+    # retrieve last location saved in redis
     def last_saved_location
       ll = []
       key = "chat-#{@user_reply_id}-last_location"
