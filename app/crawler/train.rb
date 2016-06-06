@@ -2,7 +2,6 @@ module App
   module Crawler
     # crawl kai ticketing website
     class Train
-
       def initialize
         @train_site = ENV['KERETA_API_WEB']
         @message = 'Pencarian tidak valid'
