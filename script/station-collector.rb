@@ -7,7 +7,7 @@ spiderman.get(website) do |page|
   File.open('app/stations.yml', 'w+') do |f|
     opt = options.map do |o|
       val = o.value.split '#'
-      { val[0] => val[1] }
+      { 'city_code' => val[0], 'city_name' => val[1] }
     end
     f.write opt.to_yaml
   end
