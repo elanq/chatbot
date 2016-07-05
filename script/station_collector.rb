@@ -1,4 +1,4 @@
-require_relative 'script-helper.rb'
+require_relative 'script_helper.rb'
 
 website = ENV['KERETA_API_WEB']
 spiderman = Mechanize.new { |agent| agent.user_agent_alias = 'Mac Safari' }
