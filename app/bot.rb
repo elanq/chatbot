@@ -5,7 +5,7 @@ module App
     def initialize(config)
       @product_search = App::Search::ProductSearch.new
       @venue_search = App::Search::VenueSearch.new
-      @train_schedule_search = App::Crawler::Train.new
+      @train_schedule_search = Crawler::Train.new
       @redis = config.redis
       @logger = config.logger
     end

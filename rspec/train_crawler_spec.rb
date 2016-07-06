@@ -1,12 +1,12 @@
 require_relative 'rspec_helper.rb'
 
 def train
-  @train ||= App::Crawler::Train.new
+  @train ||= Crawler::Train.new
 end
 
 describe '#new' do
-  it 'initate new instance of App::Crawler::Train' do
-    expect(train).to be_an_instance_of App::Crawler::Train
+  it 'initate new instance of Crawler::Train' do
+    expect(train).to be_an_instance_of Crawler::Train
   end
 
   it 'initiate new instance of mechanize' do
@@ -16,13 +16,14 @@ describe '#new' do
 end
 
 describe '#crawl' do
+  let(:date) { Date.today.next_month.strftime('%Y%m%d') }
   it 'crawls for ticket schedules' do
-    input = '20160615#Bandung#Madiun'
+    input = "#{date}#Bandung#Madiun"
     train.crawl input
     expect(train.result).not_to eq'Tidak ada jadwal tersedia'
     modified_input = '20150615#Bandung#Madiun'
     train.crawl modified_input
-    expect(train.result).to eq'Tidak ada jadwal tersedia'
+    expect(train.result).to eq 'Tidak ada jadwal tersedia'
   end
 
   it 'show errors for invalid input'do

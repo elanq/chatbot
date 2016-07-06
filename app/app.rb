@@ -13,4 +13,5 @@ module App
   require 'logger'
   require 'dotenv'
   require 'yaml'
+  require 'date'
 end
