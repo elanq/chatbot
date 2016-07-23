@@ -7,7 +7,7 @@ module Model
       column_2 = parse_text(schedule.css('.td2'))
       column_3 = parse_text(schedule.css('.td3'))
       column_4 = parse_text(schedule.css('.td4 > div'))
-      column_5 = parse_text(schedule.css('.td5 .td5a > div'))
+      column_5 = parse_text(schedule.css('.td5').css('.td5a > div'))
 
       @name = column_1[0]
       @dep = column_2[1]

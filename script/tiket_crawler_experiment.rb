@@ -14,21 +14,23 @@ params = {
 @spider.get(@tiket_site) do |page|
   schedule_lists = page.css('.search-list > table > #tbody_depart > tr')
   schedule_lists.each do |schedule|
-    column_1 = schedule.css('.td1').first.text.strip.gsub(/\n\t+/, '#').split('#')
-    train_name = column_1[0]
-    train_class = column_1[1]
+    train_schedule = Model::KeretaApi.new(schedule)
+    puts train_schedule.to_s
+    # column_1 = schedule.css('.td1').first.text.strip.gsub(/\n\t+/, '#').split('#')
+    # train_name = column_1[0]
+    # train_class = column_1[1]
 
-    column_2 = schedule.css('.td2').first.text.strip.gsub(/\n\t+/, '#').split('#')
-    train_departure_time = column_2[0]
-    train_departure_dest = column_2[1]
+    # column_2 = schedule.css('.td2').first.text.strip.gsub(/\n\t+/, '#').split('#')
+    # train_departure_time = column_2[0]
+    # train_departure_dest = column_2[1]
 
-    column_3 = schedule.css('.td3').first.text.strip.gsub(/\n\t+/, '#').split('#')
-    train_arrival_time = column_3[0]
-    train_arrival_dest = column_3[1]
+    # column_3 = schedule.css('.td3').first.text.strip.gsub(/\n\t+/, '#').split('#')
+    # train_arrival_time = column_3[0]
+    # train_arrival_dest = column_3[1]
 
-    link_selector = schedule.css('.td6 > div > a')
-    link = 'Not available'
-    link = link_selector.first['href'] unless link_selector.empty?
-    puts "#{train_name} #{train_departure_dest} to #{train_arrival_dest} #{link}"
+    # link_selector = schedule.css('.td6 > div > a')
+    # link = 'Not available'
+    # link = link_selector.first['href'] unless link_selector.empty?
+    # puts "#{train_name} #{train_departure_dest} to #{train_arrival_dest} #{link}"
   end
 end

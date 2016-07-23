@@ -1,6 +1,3 @@
-require 'mechanize'
-require 'dotenv'
+require_relative '../app/app.rb'
 require 'pry'
-require 'yaml'
-
 Dotenv.load
