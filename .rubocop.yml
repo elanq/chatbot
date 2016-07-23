@@ -1073,7 +1073,7 @@ Style/SymbolProc:
 Style/Tab:
   Description: 'No hard tabs.'
   StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#spaces-indentation'
-  Enabled: true
+  Enabled: false
 
 Style/TrailingBlankLines:
   Description: 'Checks trailing blank lines and final newline.'

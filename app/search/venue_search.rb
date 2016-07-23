@@ -27,7 +27,6 @@ module App
       def construct_message(response)
         url = 'https://www.google.com/maps/dir/'
         venues = response['venues']
-        puts venues.length
         message = venues.empty? ? "Tidak menemukan lokasi yang kamu maksud :(\n" : "Rekomendasi tempat sekitar kamu\n"
         venues.each do |v|
           ll_to = "#{v['location']['lat']},#{v['location']['lng']}"
