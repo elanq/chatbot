@@ -8,10 +8,10 @@ gem 'token'
 gem 'foursquare2'
 
 gem 'nokogiri'
-gem 'pry'
 gem 'mechanize'
 
 
 group :test, :development do
   gem 'dotenv'
+  gem 'pry-byebug', '~> 3.4'
 end
