@@ -1,7 +1,7 @@
 module Crawler
-# crawl kai ticketing website
+  # crawl kai ticketing website
   class Train
-  	def initialize
+    def initialize
       @train_site = ENV['KERETA_API_WEB']
       @message = 'Pencarian tidak valid'
       @spiderman = Mechanize.new { |agent| agent.user_agent_alias = 'Mac Safari' }
@@ -9,7 +9,7 @@ module Crawler
   	end
 
   	def crawl(input, option = {})
-  		splitted = input.split '#'
+  	  splitted = input.split '#'
   		unless splitted.size == 3
   			@message = 'Format pencarian salah'
   			return
