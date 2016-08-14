@@ -1,5 +1,5 @@
 module Crawler
-  # crawl tiket.com ticketing website
+  # do the thing
   class Tiket
     CRAWLER_TYPE = [
       :kereta_api,
@@ -7,9 +7,11 @@ module Crawler
       :pesawat
     ].freeze
 
-    def initialize
+    def initialize(type)
+      @type = type
+      raise Crawler::InvalidTiketType unless validate_type
       @message = 'Pencarian tidak valid'
-      @tiket_site = ENV['TIKET_TRAIN_WEB']
+      @tiket_site = URI(ENV['TIKET_TRAIN_WEB'])
       @spider = Mechanize.new { |agent| agent.user_agent_alias = 'Mac Safari' }
       @respond = []
     end
@@ -17,20 +19,20 @@ module Crawler
     def crawl(input)
       if validate_input(input)
         params = parse_input(input)
-        @tiket_site.query = URI.encode_www.form(params)
+        @tiket_site.query = URI.encode_www_form(params)
         @spider.get(@tiket_site) do |page|
           @message = 'Tidak ada kereta tersedia'
           schedule_lists = page.css('.search-list > table > #tbody_depart > tr')
           if schedule_lists.size > 0
             schedule_lists.each do |schedule|
-              @respond.push(Model::KerataApi.new(schedule))
+              @respond.push(Model::KeretaApi.new(schedule))
             end
           end
         end
       end
     end
 
-    def result
+    def results
       @respond
     end
 
@@ -53,5 +55,20 @@ module Crawler
       }
       params
     end
+
+    def init_type
+      case @type
+      when :kereta_api
+        model = Model::KeretaApi
+      end
+      model
+    end
+
+    def validate_type
+      @type = @type.to_sym if @type.class == String
+      CRAWLER_TYPE.include?(@type) || @type.class == Symbol
+    end
   end
+
+  class InvalidTiketType < StandardError; end
 end

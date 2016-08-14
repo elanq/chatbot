@@ -5,7 +5,7 @@ require_relative 'script_helper.rb'
 params = {
   'd' => 'SMT',
   'a' => 'GMR',
-  'date' => '2016-08-10',
+  'date' => '2016-10-01',
   'ret_date' => '',
   'adult' => '1',
   'infant' => '0'
@@ -13,9 +13,10 @@ params = {
 @tiket_site.query = URI.encode_www_form(params)
 @spider.get(@tiket_site) do |page|
   schedule_lists = page.css('.search-list > table > #tbody_depart > tr')
+  puts 'tidak ada jadwal tersedia' if schedule_lists.empty?
   schedule_lists.each do |schedule|
     train_schedule = Model::KeretaApi.new(schedule)
-    puts train_schedule.to_s
+    puts train_schedule
     # column_1 = schedule.css('.td1').first.text.strip.gsub(/\n\t+/, '#').split('#')
     # train_name = column_1[0]
     # train_class = column_1[1]
