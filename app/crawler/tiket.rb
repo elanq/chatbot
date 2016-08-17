@@ -16,24 +16,28 @@ module Crawler
       @respond = []
     end
 
-    def crawl(input)
-      if validate_input(input)
-        params = parse_input(input)
-        @tiket_site.query = URI.encode_www_form(params)
-        @spider.get(@tiket_site) do |page|
-          schedule_lists = page.css(@css)
-          if schedule_lists.size > 0
-            schedule_lists.each do |schedule|
-              begin
-                @respond.push(@model.new(schedule))
-              rescue Crawler::InvalidTableColumn => _e
-                # just don't create this uncomplete model
-                next
-              end
-            end
-          end
+    def build_respond(list)
+      list.each do |schedule|
+        begin
+          @respond.push(@model.new(schedule))
+        rescue Crawler::InvalidTableColumn => _e
+          # just don't create this uncomplete model
+          next
         end
       end
+    end
+
+    def process_input(input)
+      params = parse_input(input)
+      @tiket_site.query = URI.encode_www_form(params)
+      @spider.get(@tiket_site) do |page|
+        schedule_lists = page.css(@css)
+        build_respond(schedule_lists) if schedule_lists.size > 0
+      end
+    end
+
+    def crawl(input)
+      process_input(input) if validate_input(input)
     end
 
     def results

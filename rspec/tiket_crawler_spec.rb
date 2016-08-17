@@ -29,7 +29,6 @@ RSpec.describe 'tiket crawler' do
         puts pesawat_crawler.results.first
       end
     end
-    it 'crawl available hotel rooms'
   end
 
   context '#request' do
