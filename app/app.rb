@@ -15,4 +15,8 @@ module App
   require 'dotenv'
   require 'yaml'
   require 'date'
+
+  require 'pry'
+
+  Dotenv.load
 end
