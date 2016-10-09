@@ -19,15 +19,15 @@ RSpec.describe 'train  crawler' do
   describe '#crawl' do
     let(:date) { Date.today.next_month.strftime('%Y%m%d') }
     it 'crawls for ticket schedules' do
-      input = "#{date}#Bandung#Madiun"
+      input = "#{date}#Gambir#Madiun"
       train.crawl input
       expect(train.result).not_to eq'Tidak ada jadwal tersedia'
-      modified_input = '20150615#Bandung#Madiun'
+      modified_input = '20150615#Gambir#Madiun'
       train.crawl modified_input
       expect(train.result).to eq 'Tidak ada jadwal tersedia'
     end
 
-    it 'show errors for invalid input'do
+    it 'show errors for invalid input' do
       invalid_city_input = '20160615#Badung#Madiun'
       train.crawl invalid_city_input
       expect(train.result).to eq 'Nama stasiun tidak dikenal, coba lagi'

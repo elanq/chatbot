@@ -8,7 +8,7 @@ spiderman.get(website) do |page|
     opt = options.map do |o|
       val = o.value.split '#'
       { 'city_code' => val[0], 'city_name' => val[1] }
-    end
+    end.reject(&:nil?)
     f.write opt.to_yaml
   end
 end

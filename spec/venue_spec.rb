@@ -33,5 +33,4 @@ RSpec.describe 'venue' do
     #   end
     # end
   end
-
 end

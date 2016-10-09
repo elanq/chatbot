@@ -23,6 +23,7 @@ class Bot
   end
 
   # processing query.
+  # complex conditioning ahead
   def process(input)
     # reset params
     @logger.info 'reset search parameters'
@@ -62,11 +63,11 @@ class Bot
       }
       save_search_term search_term
       last_location.empty? ? @message = 'Bisa minta lokasi sekarang?' : handle_location(last_location[0], last_location[1])
-    when /BANTU/i, /TOLONG/i, /APA/i
+    when Query.asking_help?
       @message = help_message
-    when /LAGI/i
+    when Query.asking_more?
       search_product true
-    when /TEST/i, /PING/i
+    when Query.testing_connection?
       @message = 'Saya online gan! apa yang bisa saya BANTU? :D'
     else
       if request_ticketing?(@user_reply_id)

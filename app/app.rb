@@ -3,6 +3,7 @@ module App
   require_relative 'crawler/crawler.rb'
   require_relative 'search/search.rb'
   require_relative 'model/model.rb'
+  require_relative 'helper/query.rb'
   require_relative 'bot.rb'
   require_relative 'config.rb'
 

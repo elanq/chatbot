@@ -13,7 +13,7 @@ RSpec.describe 'bot' do
     @logger ||= config.logger
   end
 
-  def search(input)
+  def chat(input)
     message = input
     message = build_message(input) unless input.class == Telegram::Bot::Types::Message
     bot.process message
@@ -64,10 +64,15 @@ RSpec.describe 'bot' do
   describe '#bot_learning' do
     context 'when user inputting search query' do
       it 'should able to differentiate between product or venue search' do
-        search '/carilokasi burger'
+        chat '/carilokasi burger'
         expect(bot.request_location?(1234)).to be true
-        search '/caribarang piring cantik'
+        chat '/caribarang piring cantik'
         expect(bot.request_location?(1234)).to be false
+      end
+
+      it 'should know that user needs helping' do
+        chat 'tolong'
+        expect(bot.reply).to eq "/caribarang <nama barang> untuk mencari barang yang tersedia di bukalapak.com\n /carilokasi untuk mencari lokasi di sekitar kamu\n\n Untuk diperhatikan bahwa bot ini hanya bisa memahami perintah-perintah diatas. Jadi kalau mau aneh-aneh disini bukan tempatnya yaaaa"
       end
     end
   end
@@ -85,26 +90,26 @@ RSpec.describe 'bot' do
     context 'when accepting user input and process query' do
       it 'search product with bukalapak api' do
         words = ['sepeda gunung', 'gelas cantik', 'figure iron man']
-        words.each do |k, v|
+        words.each do |_k, v|
           input = "/caribarang #{v}"
-          search input
+          chat input
         end
       end
 
       it 'search product with bukalapak api and move to different pages' do
         # search something first
-        search '/caribarang peralatan makan'
+        chat '/caribarang peralatan makan'
         # move to different page for peralatan makan
-        search 'lagi'
-        # reset search
-        search '/caribarang buku gambar'
+        chat 'lagi'
+        # reset
+        chat '/caribarang buku gambar'
         # move to different page for buku gambar
-        search 'lagi'
+        chat 'lagi'
       end
 
       it 'search venue with foursquare api' do
         message = build_message '/carilokasi burger king'
-        search message
+        chat message
         expect(bot.request_location?(1234)).to be true
       end
     end

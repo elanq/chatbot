@@ -15,16 +15,15 @@ module Crawler
     end
 
     def crawl(input)
-      if validate_input(input)
-        params = parse_input(input)
-        @tiket_site.query = URI.encode_www.form(params)
-        @spider.get(@tiket_site) do |page|
-          @message = 'Tidak ada kereta tersedia'
-          schedule_lists = page.css('.search-list > table > #tbody_depart > tr')
-          if schedule_lists.size > 0
-            schedule_lists.each do |schedule|
-              @respond.push(Model::KerataApi.new(schedule))
-            end
+      return unless validate_input(input)
+      params = parse_input(input)
+      @tiket_site.query = URI.encode_www.form(params)
+      @spider.get(@tiket_site) do |page|
+        @message = 'Tidak ada kereta tersedia'
+        schedule_lists = page.css('.search-list > table > #tbody_depart > tr')
+        if schedule_lists.size > 0
+          schedule_lists.each do |schedule|
+            @respond.push(Model::KerataApi.new(schedule))
           end
         end
       end

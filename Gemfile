@@ -10,7 +10,6 @@ gem 'foursquare2'
 gem 'nokogiri'
 gem 'mechanize'
 
-
 group :test, :development do
   gem 'dotenv'
   gem 'pry-byebug', '~> 3.4'

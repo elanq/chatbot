@@ -12,7 +12,6 @@ RSpec.describe 'tiket crawler' do
     # it 'recognize Model::KeretaApi instance' do
     #   expect(kereta_api).to be_an_instance_of Model::KeretaApi
     # end
-
   end
 
   context '#crawl' do
@@ -26,4 +25,3 @@ RSpec.describe 'tiket crawler' do
     it 'redirect to tiket.com payment page'
   end
 end
-
