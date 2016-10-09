@@ -19,7 +19,7 @@ module App
       end
 
       def search_recommended(opts = {})
-        return 'Tidak bisa mencari data, mungkin locationnya dinyalain?' if opts[:ll].nil?
+        return 'Tidak bisa mencari data, mungkin locationnya belom dinyalain?' if opts[:ll].nil?
       end
 
       private
