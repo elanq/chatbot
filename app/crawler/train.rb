@@ -46,7 +46,7 @@ module Crawler
 
     def result
    	  @message
-   	end
+    end
 
     private
 
