@@ -24,18 +24,8 @@ class Bot
 
   # processing query.
   # complex conditioning ahead
-  def process(input)
-    # reset params
-    @logger.info 'reset search parameters'
-    @message = nil
-    message_text = input.text
-    @user_reply_id = input.chat.id
-    # set default request to false
-    save_search_term request_location: false
-
-    case message_text
-    when /start/i
-      @message = welcome
+  def process_command(input)
+    case input
     when /cektiket/i
       @message = cektiket_disclaimer
       search_term = {
@@ -63,6 +53,22 @@ class Bot
       }
       save_search_term search_term
       last_location.empty? ? @message = 'Bisa minta lokasi sekarang?' : handle_location(last_location[0], last_location[1])
+    end
+    false
+  end
+
+  def process(input)
+    # reset params
+    @logger.info 'reset search parameters'
+    @message = nil
+    message_text = input.text
+    @user_reply_id = input.chat.id
+    # set default request to false
+    save_search_term request_location: false
+
+    case message_text
+    when /start/i
+      @message = welcome
     when Query.asking_help?
       @message = help_message
     when Query.asking_more?
@@ -70,6 +76,7 @@ class Bot
     when Query.testing_connection?
       @message = 'Saya online gan! apa yang bisa saya BANTU? :D'
     else
+      process_command(message_text)
       if request_ticketing?(@user_reply_id)
         @train_schedule_search.crawl message_text
         @message = @train_schedule_search.result
