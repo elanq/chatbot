@@ -2,11 +2,11 @@
 class Bot
   # initialize bot
   def initialize(config)
-    @product_search = App::Search::ProductSearch.new
-    @venue_search = App::Search::VenueSearch.new
-    @train_schedule_search = Crawler::Train.new
-    @redis = config.redis
-    @logger = config.logger
+    @product_search ||= App::Search::ProductSearch.new
+    @venue_search ||= App::Search::VenueSearch.new
+    @train_schedule_search ||= Crawler::Train.new
+    @redis ||= config.redis
+    @logger ||= config.logger
   end
 
   # is bot requesting location? return true if it is
@@ -24,39 +24,6 @@ class Bot
 
   # processing query.
   # complex conditioning ahead
-  def process_command(input)
-    case input
-    when /cektiket/i
-      @message = cektiket_disclaimer
-      search_term = {
-        action: 'cek_tiket',
-        last_request_at: Time.now,
-        request_ticketing: true
-      }
-      save_search_term search_term
-    when /caribarang/i
-      search_term = {
-        action: 'cari_barang',
-        keywords: message_text,
-        current_page: 0,
-        last_request_at: Time.now
-      }
-      save_search_term(search_term)
-      search_product
-    when /carilokasi/i
-      last_location = last_saved_location
-      search_term = {
-        action: 'cari_lokasi',
-        venue_keywords: message_text,
-        last_request_at: Time.now,
-        request_location: last_location.empty? ? true : false
-      }
-      save_search_term search_term
-      last_location.empty? ? @message = 'Bisa minta lokasi sekarang?' : handle_location(last_location[0], last_location[1])
-    end
-    false
-  end
-
   def process(input)
     # reset params
     @logger.info 'reset search parameters'
@@ -97,6 +64,39 @@ class Bot
   end
 
   private
+
+  def process_command(input)
+    case input
+    when /cektiket/i
+      @message = cektiket_disclaimer
+      search_term = {
+        action: 'cek_tiket',
+        last_request_at: Time.now,
+        request_ticketing: true
+      }
+      save_search_term search_term
+    when /caribarang/i
+      search_term = {
+        action: 'cari_barang',
+        keywords: input,
+        current_page: 0,
+        last_request_at: Time.now
+      }
+      save_search_term(search_term)
+      search_product
+    when /carilokasi/i
+      last_location = last_saved_location
+      search_term = {
+        action: 'cari_lokasi',
+        venue_keywords: input,
+        last_request_at: Time.now,
+        request_location: last_location.empty? ? true : false
+      }
+      save_search_term search_term
+      last_location.empty? ? @message = 'Bisa minta lokasi sekarang?' : handle_location(last_location[0], last_location[1])
+    end
+    false
+  end
 
   def welcome
     'Halo, saya asisten robot ciptaan @qisthi yang bisa membantu kamu untuk mendapatkan informasi-informasi yang kamu butuhkan. Tulis BANTU untuk melihat daftar perintah yang saya ketahui :D'
