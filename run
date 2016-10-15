@@ -2,11 +2,9 @@
 require 'telegram/bot'
 require_relative 'app/app.rb'
 
-config = App::Config.new
-
 bot_logic = Bot.new config
-logger = config.logger
-Telegram::Bot::Client.run(config.token, logger: logger) do |bot|
+logger = Config.logger
+Telegram::Bot::Client.run(Config.token, logger: logger) do |bot|
   bot.listen do |message|
     processed = false
     reply_markup = nil

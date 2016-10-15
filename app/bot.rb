@@ -1,12 +1,12 @@
 # robot logic
 class Bot
   # initialize bot
-  def initialize(config)
+  def initialize
     @product_search ||= App::Search::ProductSearch.new
     @venue_search ||= App::Search::VenueSearch.new
     @train_schedule_search ||= Crawler::Train.new
-    @redis ||= config.redis
-    @logger ||= config.logger
+    @redis ||= Config.redis
+    @logger ||= Config.logger
   end
 
   # is bot requesting location? return true if it is

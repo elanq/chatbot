@@ -1,16 +1,12 @@
 require_relative 'rspec_helper.rb'
 
 RSpec.describe 'bot' do
-  def config
-    @config ||= App::Config.new
-  end
-
   def bot
-    @bot ||= Bot.new config
+    @bot ||= Bot.new
   end
 
   def logger
-    @logger ||= config.logger
+    @logger ||= Config.logger
   end
 
   def chat(input)
@@ -40,7 +36,7 @@ RSpec.describe 'bot' do
   describe '#new' do
     context 'when creating bot instance' do
       it 'create new bot instance' do
-        @bot = Bot.new config
+        @bot = Bot.new
         expect(@bot).to be_an_instance_of Bot
       end
     end
@@ -49,14 +45,14 @@ RSpec.describe 'bot' do
   describe '#conn' do
     context 'when attempt a connection to redis server' do
       it 'create redis connection' do
-        expect(config.redis).to be_an_instance_of Redis
+        expect(Config.redis).to be_an_instance_of Redis
       end
     end
 
     context 'when set and get state to redis server' do
       it 'create state on redis server and retrieved' do
-        config.redis.set 'key', 'value'
-        expect(config.redis.get('key')).to be == 'value'
+        Config.redis.set 'key', 'value'
+        expect(Config.redis.get('key')).to be == 'value'
       end
     end
   end
@@ -83,8 +79,7 @@ RSpec.describe 'bot' do
     end
 
     def redis
-      conf = App::Config.new
-      conf.redis
+      Config.redis
     end
 
     context 'when accepting user input and process query' do
