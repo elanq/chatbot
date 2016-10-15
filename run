@@ -2,7 +2,7 @@
 require 'telegram/bot'
 require_relative 'app/app.rb'
 
-bot_logic = Bot.new config
+bot_logic = Bot.new
 logger = Config.logger
 Telegram::Bot::Client.run(Config.token, logger: logger) do |bot|
   bot.listen do |message|
