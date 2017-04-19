@@ -9,6 +9,7 @@ gem 'foursquare2'
 
 gem 'nokogiri'
 gem 'mechanize'
+gem 'faraday'
 
 group :test, :development do
   gem 'dotenv'
