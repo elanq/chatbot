@@ -2,7 +2,7 @@ module Client
   class Banker
 
     def initialize
-        banker_host = ENV['BANKER_HOST']
+        @banker_host = ENV['BANKER_HOST']
         @connection = Faraday.new(banker_host)
     end
 
