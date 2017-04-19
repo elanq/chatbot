@@ -13,6 +13,7 @@ module App
 
   Dotenv.load
 
+  require_relative 'client/client.rb'
   require_relative 'crawler/crawler.rb'
   require_relative 'search/search.rb'
   require_relative 'model/model.rb'
