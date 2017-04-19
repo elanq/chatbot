@@ -1,5 +1,5 @@
 module App
-  module Search
+  module Service
     # used to search product with BL Api and provide the result in message
     class ProductSearch
       def initialize

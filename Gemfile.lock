@@ -27,6 +27,7 @@ GEM
     hashie (3.4.4)
     http-cookie (1.0.2)
       domain_name (~> 0.5)
+    i18n (0.8.1)
     ice_nine (0.11.2)
     mechanize (2.7.4)
       domain_name (~> 0.5, >= 0.5.1)
@@ -40,6 +41,9 @@ GEM
     method_source (0.8.2)
     mime-types (2.99.2)
     mini_portile2 (2.0.0)
+    money (6.8.3)
+      i18n (>= 0.6.4, < 0.9)
+      sixarm_ruby_unaccent (>= 1.1.1, < 2)
     multipart-post (2.0.0)
     net-http-digest_auth (1.4)
     net-http-persistent (2.9.4)
@@ -67,6 +71,7 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.4.0)
     rspec-support (3.4.1)
+    sixarm_ruby_unaccent (1.1.1)
     slop (3.6.0)
     telegram-bot-ruby (0.5.0)
       faraday
@@ -91,6 +96,7 @@ DEPENDENCIES
   faraday
   foursquare2
   mechanize
+  money
   nokogiri
   pry-byebug (~> 3.4)
   redis (>= 3.2.1)

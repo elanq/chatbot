@@ -11,7 +11,9 @@ module Client
 
     def report(month, year)
       response = @connection.get("/banker/report?month=#{month}&year=#{year}")
-      JSON.parse(response.body, symbolize_names: true)
+      return [] if response.status == 404
+      raw = JSON.parse(response.body, symbolize_names: true)
+      Parser::BankerParser.parse(raw)
     end
 
     private

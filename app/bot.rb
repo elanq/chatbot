@@ -2,11 +2,13 @@
 class Bot
   # initialize bot
   def initialize
-    @product_search ||= App::Search::ProductSearch.new
-    @venue_search ||= App::Search::VenueSearch.new
+    @product_search ||= App::Service::ProductSearch.new
+    @venue_search ||= App::Service::VenueSearch.new
+    @banker_service ||= Service::BankerService.new
     @train_schedule_search ||= Crawler::Train.new
     @redis ||= Config.redis
     @logger ||= Config.logger
+    @banker_client ||= Config.banker_client
   end
 
   # is bot requesting location? return true if it is
@@ -67,6 +69,15 @@ class Bot
 
   def process_command(input)
     case input
+    when /cektabungan/i
+      @message = "sedang mengecek penghasilan kamu..."
+      search_term = {
+        action: 'cek_tabungan',
+        last_request_at: Time.now,
+        keywords: input
+      }
+      save_search_term(search_term)
+      check_saving
     when /cektiket/i
       @message = cektiket_disclaimer
       search_term = {
@@ -97,7 +108,7 @@ class Bot
     end
     false
   end
-
+  # TODO:  These response needed to be refactored ASAP
   def welcome
     'Halo, saya asisten robot ciptaan @qisthi yang bisa membantu kamu untuk mendapatkan informasi-informasi yang kamu butuhkan. Tulis BANTU untuk melihat daftar perintah yang saya ketahui :D'
   end
@@ -150,6 +161,20 @@ class Bot
 
     @message = @product_search.search(opts)
     save_search_term request_location: false
+  end
+
+  def check_saving
+    keywords = @redis.hget "chat-#{@user_reply_id}", 'keywords'
+    @message = 'Terjadi kesalahan dalam pengecekan tabungan'
+    return if keywords.nil?
+
+    keywords.slice! keywords.split[0]
+    params = keywords.split('#')[0]
+    month = params[0]
+    year = params[1]
+    return if month == nil || year == nil
+
+    @message = @banker_service.monthly_summary(month, year)
   end
 
   # search venue

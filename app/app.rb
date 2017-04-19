@@ -10,14 +10,17 @@ module App
   require 'yaml'
   require 'date'
   require 'pry'
+  require 'money'
 
   Dotenv.load
+  Money.use_i18n = false
 
   require_relative 'client/client.rb'
   require_relative 'crawler/crawler.rb'
-  require_relative 'search/search.rb'
+  require_relative 'service/service.rb'
   require_relative 'model/model.rb'
   require_relative 'helper/query.rb'
+  require_relative 'parser/banker_parser.rb'
   require_relative 'bot.rb'
   require_relative 'config.rb'
 end

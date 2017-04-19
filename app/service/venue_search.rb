@@ -1,5 +1,5 @@
 module App
-  module Search
+  module Service
     # Use foursquare api to search user inputted location
     class VenueSearch
       require 'foursquare2'
