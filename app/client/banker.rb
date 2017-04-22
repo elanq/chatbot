@@ -13,10 +13,16 @@ module Client
       response = @connection.get("/banker/report?month=#{month}&year=#{year}")
       return [] if response.status == 404
       raw = JSON.parse(response.body, symbolize_names: true)
-      Parser::BankerParser.parse(raw)
+      generate_model(raw)
     end
 
     private
     attr_reader :banker_host, :connection
+
+    def generate_model(data)
+      data.map do |val|
+        ::Model::BankRecord.new(val)
+      end
+    end
   end
 end
