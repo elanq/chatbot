@@ -4,3 +4,4 @@ app/stations.yml
 .bundle/
 bin/
 .env
+*.swp

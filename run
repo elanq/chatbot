@@ -8,6 +8,9 @@ Telegram::Bot::Client.run(Config.token, logger: logger) do |bot|
   bot.listen do |message|
     processed = false
     reply_markup = nil
+    file = nil
+
+
     unless message.location.nil?
       logger.info 'this message contains location'
       lat = message.location.latitude
@@ -16,7 +19,11 @@ Telegram::Bot::Client.run(Config.token, logger: logger) do |bot|
       processed = true
     end
 
-    bot_logic.process(message) unless processed
+    unless message.document.nil?
+      file = bot.api.get_file(message.document.file_id)
+    end
+
+    bot_logic.process(message, file) unless processed
     if bot_logic.request_location?(message.chat.id)
       kb = [Telegram::Bot::Types::KeyboardButton.new(text: 'Kirim lokasi sekarang', request_location: true)]
       reply_markup = Telegram::Bot::Types::ReplyKeyboardMarkup.new(keyboard: kb)

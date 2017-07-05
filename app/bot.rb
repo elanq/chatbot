@@ -26,14 +26,14 @@ class Bot
 
   # processing query.
   # complex conditioning ahead
-  def process(input)
+  def process(input, file = nil)
     # reset params
     @logger.info 'reset search parameters'
     @message = nil
     message_text = input.text
     @user_reply_id = input.chat.id
     # set default request to false
-    save_search_term request_location: false
+    save_command request_location: false
 
     case message_text
     when /start/i
@@ -45,11 +45,11 @@ class Bot
     when Query.testing_connection?
       @message = 'Saya online gan! apa yang bisa saya BANTU? :D'
     else
-      process_command(message_text)
+      process_command(message_text, file)
       if request_ticketing?(@user_reply_id)
         @train_schedule_search.crawl message_text
         @message = @train_schedule_search.result
-        save_search_term request_ticketing: false
+        save_command request_ticketing: false
       end
     end
   end
@@ -67,43 +67,45 @@ class Bot
 
   private
 
-  def process_command(input)
+  def process_command(input, file = nil)
     case input
+    # cektabungan/MM/YY
+    # specify month as 00 to receive yearly summary
     when /cektabungan/i
       @message = "sedang mengecek penghasilan kamu..."
-      search_term = {
+      command = {
         action: 'cek_tabungan',
         last_request_at: Time.now,
         keywords: input
       }
-      save_search_term(search_term)
+      save_command(command)
       check_saving
     when /cektiket/i
       @message = cektiket_disclaimer
-      search_term = {
+      command = {
         action: 'cek_tiket',
         last_request_at: Time.now,
         request_ticketing: true
       }
-      save_search_term search_term
+      save_command command
     when /caribarang/i
-      search_term = {
+      command = {
         action: 'cari_barang',
         keywords: input,
         current_page: 0,
         last_request_at: Time.now
       }
-      save_search_term(search_term)
+      save_command(command)
       search_product
     when /carilokasi/i
       last_location = last_saved_location
-      search_term = {
+      command = {
         action: 'cari_lokasi',
         venue_keywords: input,
         last_request_at: Time.now,
         request_location: last_location.empty? ? true : false
       }
-      save_search_term search_term
+      save_command command
       last_location.empty? ? @message = 'Bisa minta lokasi sekarang?' : handle_location(last_location[0], last_location[1])
     end
     false
@@ -123,8 +125,8 @@ class Bot
   end
 
   # set search param to redis
-  def save_search_term(search_term)
-    search_term.each do |k, v|
+  def save_command(command)
+    command.each do |k, v|
       @redis.hset "chat-#{@user_reply_id}", k, v
     end
   end
@@ -160,7 +162,7 @@ class Bot
     opts = { keywords: keywords.strip!, per_page: 6, page: page }
 
     @message = @product_search.search(opts)
-    save_search_term request_location: false
+    save_command request_location: false
   end
 
   def check_saving
@@ -168,13 +170,11 @@ class Bot
     @message = 'Terjadi kesalahan dalam pengecekan tabungan'
     return if keywords.nil?
 
-    keywords.slice! keywords.split[0]
-    params = keywords.split('#')[0]
-    month = params[0]
-    year = params[1]
-    return if month == nil || year == nil
-
-    @message = @banker_service.monthly_summary(month, year)
+    params = keywords.split('#')
+    month = params[1]
+    year = params[2]
+    return if month.nil? || year.nil?
+    @message = @banker_service.summary(month, year)
   end
 
   # search venue
@@ -192,7 +192,7 @@ class Bot
     @message = @venue_search.search(opts)
     @logger.info "search venue completed, return message '#{@message}'"
     # change request status back to false
-    save_search_term request_location: false
+    save_command request_location: false
     save_last_location ll if last_saved_location.empty?
   end
 end
