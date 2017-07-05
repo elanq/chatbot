@@ -6,9 +6,11 @@ gem 'redis', '>= 3.2.1'
 gem 'telegram-bot-ruby'
 gem 'token'
 gem 'foursquare2'
+gem 'money'
 
 gem 'nokogiri'
 gem 'mechanize'
+gem 'faraday'
 
 group :test, :development do
   gem 'dotenv'
